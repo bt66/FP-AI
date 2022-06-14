@@ -2,7 +2,7 @@
 #include <HTTPClient.h>
 
 const char* ssid = "bt66_1";
-const char* password = "2wsx1qaz";
+const char* password = "";
 const int temperaturePin = 32;
 const int humidityPin = 33;
 
