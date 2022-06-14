@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: ai-backend
+  name: ai-backend-prod
+spec:
+  selector:
+    matchLabels:
+      run: ai-backend-prod
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: ai-backend-prod
+    spec:
+      containers:
+        - name: ai-backend-prod
+          image: bt66/fp-ai-backend:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: MONGODB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: backend-creds
+                  key: username
+            
+            - name: MONGODB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: backend-creds
+                  key: password
+          envFrom:
+            - configMapRef:
+                name: ai-prod-configmap
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: ai-backend
+  name: ai-service-prod
+spec:
+  type: NodePort
+  selector:
+    run: ai-backend-prod
+  ports:
+    - port: 3000
+      # targetPort: 3000
+      nodePort: 30003
