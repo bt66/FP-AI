@@ -31,7 +31,7 @@ void setup() {
 void loop() {
   if ((millis() - LastTime > timerDelay)) {
     if(WiFi.status() == WL_CONNECTED){
-      http.begin(datasetAPI.c_str());
+      http.begin(datasetAPI);
       http.addHeader("Content-Type", "application/json");
       String temperature = String(analogRead(temperaturePin));
       String humidity = String(analogRead(humidityPin));
@@ -50,9 +50,9 @@ void loop() {
         Serial.println(http.getString());
       }
       http.end();
+      LastTime = millis();
     }else {
       WiFi.reconnect();
     }
-    LastTime = millis();
   }
 }
